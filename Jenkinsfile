@@ -8,7 +8,7 @@ pipeline {
   stages {
     stage('Checkout Code') {
       steps {
-        git 'https://github.com/yourname/esxi-deploy.git'
+        git 'https://github.com/udoteh/cssm-terraform.git'
       }
     }
 
