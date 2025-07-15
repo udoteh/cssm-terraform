@@ -2,46 +2,51 @@ pipeline {
   agent any
 
   environment {
-    TF_IN_AUTOMATION = "true"
+    TF_VAR_vsphere_user = credentials('vsphere_user')
+    TF_VAR_vsphere_password = credentials('vsphere_user')
+    TF_VAR_vsphere_server = '192.168.1.87'
   }
 
   stages {
     stage('Checkout Code') {
       steps {
-        git 'https://github.com/udoteh/cssm-terraform.git'
+        git url: 'https://github.com/udoteh/cssm-terraform.git'
       }
     }
 
     stage('Initialize Terraform') {
       steps {
-        dir('terraform') {
-          sh 'terraform init'
-        }
+        sh 'terraform init'
       }
     }
 
     stage('Validate Terraform Config') {
       steps {
-        dir('terraform') {
-          sh 'terraform validate'
-        }
+        sh 'terraform validate'
       }
     }
 
     stage('Plan Infrastructure') {
       steps {
-        dir('terraform') {
-          sh 'terraform plan -out=tfplan'
-        }
+        sh 'terraform plan -out=tfplan'
       }
     }
 
     stage('Apply Infrastructure') {
       steps {
-        dir('terraform') {
-          sh 'terraform apply -auto-approve tfplan'
-        }
+        input message: "Approve apply?"
+        sh 'terraform apply -auto-approve tfplan'
       }
     }
   }
+
+  post {
+    success {
+      echo "✅ Infrastructure successfully deployed!"
+    }
+    failure {
+      echo "❌ Build failed!"
+    }
+  }
 }
+
