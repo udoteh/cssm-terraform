@@ -2,11 +2,8 @@ pipeline {
   agent any
 
   environment {
-    VSPHERE_CREDS = credentials('vsphere-creds')
-    TF_VAR_vsphere_user = "${VSPHERE_CREDS_USR}"
-    TF_VAR_vsphere_password = "${VSPHERE_CREDS_PSW}"
     TF_VAR_vsphere_server = '192.168.1.87'
-}
+  }
 
   stages {
     stage('Checkout Code') {
@@ -17,27 +14,35 @@ pipeline {
 
     stage('Initialize Terraform') {
       steps {
-        sh 'terraform init'
+        withCredentials([usernamePassword(credentialsId: 'vsphere-creds', usernameVariable: 'TF_VAR_vsphere_user', passwordVariable: 'TF_VAR_vsphere_password')]) {
+          sh 'terraform init'
+        }
       }
     }
 
     stage('Validate Terraform Config') {
       steps {
-        sh 'terraform validate'
+        withCredentials([usernamePassword(credentialsId: 'vsphere-creds', usernameVariable: 'TF_VAR_vsphere_user', passwordVariable: 'TF_VAR_vsphere_password')]) {
+          sh 'terraform validate'
+        }
       }
     }
 
     stage('Plan Infrastructure') {
       steps {
-        sh 'terraform plan -out=tfplan'
+        withCredentials([usernamePassword(credentialsId: 'vsphere-creds', usernameVariable: 'TF_VAR_vsphere_user', passwordVariable: 'TF_VAR_vsphere_password')]) {
+          sh 'terraform plan -out=tfplan'
+        }
       }
     }
 
     stage('Apply Infrastructure') {
       steps {
         input message: "Approve apply?"
-        sh 'terraform apply -auto-approve tfplan'
-      }
+        withCredentials([usernamePassword(credentialsId: 'vsphere-creds', usernameVariable: 'TF_VAR_vsphere_user', passwordVariable: 'TF_VAR_vsphere_password')]) {
+          sh 'terraform apply -auto-approve tfplan'
+        }
+      }  
     }
   }
 
