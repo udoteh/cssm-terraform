@@ -1,3 +1,4 @@
+# vSphere Credentials
 variable "vsphere_user" {
   description = "vSphere username"
   type        = string
@@ -14,32 +15,45 @@ variable "vsphere_server" {
   type        = string
 }
 
+# Infrastructure Configuration
 variable "datacenter" {
-  description = "vSphere datacenter name"
+  description = "Name of the vSphere datacenter"
   type        = string
 }
 
 variable "datastore" {
-  description = "vSphere datastore name"
+  description = "Name of the datastore to use"
   type        = string
 }
 
 variable "cluster" {
-  description = "vSphere compute cluster name"
+  description = "Name of the vSphere compute cluster"
   type        = string
 }
 
 variable "network" {
-  description = "vSphere network name"
+  description = "Name of the VM network"
   type        = string
 }
 
 variable "template" {
-  description = "Name of VM template to clone from"
+  description = "Name of the template VM to clone from"
   type        = string
 }
 
 variable "gateway" {
-  description = "IPv4 gateway address for the VMs"
+  description = "IPv4 gateway for the VM network"
   type        = string
 }
+
+# VM Definitions
+variable "cmms_servers" {
+  description = "Definition of CMMS virtual machines"
+  type = map(object({
+    cpu    = number
+    memory = number
+    disk   = number
+    ip     = string
+  }))
+}
+
