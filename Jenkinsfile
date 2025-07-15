@@ -2,10 +2,11 @@ pipeline {
   agent any
 
   environment {
-    TF_VAR_vsphere_user = credentials('root')
-    TF_VAR_vsphere_password = credentials('P@ssw0rd')
+    VSPHERE_CREDS = credentials('vsphere-creds')
+    TF_VAR_vsphere_user = "${VSPHERE_CREDS_USR}"
+    TF_VAR_vsphere_password = "${VSPHERE_CREDS_PSW}"
     TF_VAR_vsphere_server = '192.168.1.87'
-  }
+}
 
   stages {
     stage('Checkout Code') {
