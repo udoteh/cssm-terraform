@@ -2,8 +2,8 @@ pipeline {
   agent any
 
   environment {
-    TF_VAR_vsphere_user = credentials('vsphere_user')
-    TF_VAR_vsphere_password = credentials('vsphere_user')
+    TF_VAR_vsphere_user = credentials('root')
+    TF_VAR_vsphere_password = credentials('P@ssw0rd')
     TF_VAR_vsphere_server = '192.168.1.87'
   }
 
